@@ -1,13 +1,30 @@
 import React from 'react';
 import {NavLink} from "react-router-dom";
-import {Space, Select, Button} from "antd";
+import {Space, Select} from "antd";
 import Search from "antd/es/input/Search";
+import LoginAvatar from "./LoginAvatar";
+import {useDispatch} from "react-redux";
+import {login} from "../redux/userSlice";
 
 function NavHeader(props) {
     const options = [
         {label: '问题', value: 'issue'},
         {label: '书籍', value: 'book'},
     ];
+
+    const dispatch = useDispatch();
+
+    const loginHandle = () => {
+        console.log("模拟登录");
+        dispatch(login({name: "test", avatar: "https://avatars.githubusercontent.com/u/77447646?v=4"}));
+    }
+
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         console.log("模拟登录");
+    //         dispatch(login({name: "test", avatar: "https://avatars.githubusercontent.com/u/77447646?v=4"}));
+    //     }, 3000);
+    // }, [dispatch]);
 
     const onSearch = value => console.log(value);
     return (
@@ -41,7 +58,7 @@ function NavHeader(props) {
                 </Space.Compact>
             </div>
             <div className="loginBtnContainer">
-                <Button type="primary" size="large">注册/登录</Button>
+                <LoginAvatar loginHandle={loginHandle}/>
             </div>
         </div>
     );
