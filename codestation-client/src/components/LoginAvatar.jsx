@@ -1,6 +1,6 @@
 import React from 'react';
 import {useSelector} from "react-redux";
-import {Avatar, Button, List, Popover} from "antd";
+import {Avatar, Button, Image, List, Popover} from "antd";
 
 function LoginAvatar(props) {
 
@@ -19,7 +19,7 @@ function LoginAvatar(props) {
         );
         return (
             <Popover content={content}>
-                <Avatar style={{cursor: "pointer"}} size="large" src={user.userInfo.avatar}/>
+                <Avatar style={{cursor: "pointer"}} size="large" src={<Image src={user.userInfo?.avatar}/>}/>
             </Popover>
         );
     } else {
