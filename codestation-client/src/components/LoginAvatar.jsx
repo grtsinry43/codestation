@@ -19,7 +19,7 @@ function LoginAvatar(props) {
         );
         return (
             <Popover content={content}>
-                <Avatar style={{cursor: "pointer"}} size="large" src={<Image src={user.userInfo?.avatar}/>}/>
+                <Avatar style={{cursor: "pointer"}} size="large" src={<Image src={user.userInfo?.avatar} preview={false}/>}/>
             </Popover>
         );
     } else {
