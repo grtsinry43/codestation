@@ -13,7 +13,11 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
         <Provider store={store}>
-            <ConfigProvider locale={zhCN}>
+            <ConfigProvider locale={zhCN} theme={{
+                token: {
+                    borderRadius: 0,
+                }
+            }}>
                 <BrowserRouter>
                     <App/>
                 </BrowserRouter>

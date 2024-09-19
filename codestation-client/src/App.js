@@ -13,14 +13,14 @@ function App() {
     const closeModal = () => {
         setIsModalOpen(false);
     }
-    const openModal = () => {
+    const loginHandle = () => {
         setIsModalOpen(true);
     }
     return (
         <div className="App">
             <Layout>
                 <Header>
-                    <NavHeader />
+                    <NavHeader loginHandle={loginHandle}/>
                 </Header>
                 <Content className="content">
                     <Router/>
@@ -29,7 +29,7 @@ function App() {
                     <PageFooter/>
                 </Footer>
                 {/*全局登录弹窗*/}
-                <LoginForm isShow={isModalOpen} closeModal={closeModal} openModal={openModal}/>
+                <LoginForm isShow={isModalOpen} closeModal={closeModal}/>
             </Layout>
         </div>
     );

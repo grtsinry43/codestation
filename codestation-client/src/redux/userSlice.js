@@ -10,16 +10,11 @@ const userSlice = createSlice({
         initUserInfo: (state, action) => {
             state.userInfo = action.payload;
         },
-        login: (state, action) => {
-            state.isLogin = true;
-            state.userInfo = action.payload;
-        },
-        logout: (state) => {
-            state.isLogin = false;
-            state.userInfo = {};
+        changeLoginStatus: (state, action) => {
+            state.isLogin = action.payload;
         },
     },
 });
 
-export const {initUserInfo, login, logout} = userSlice.actions;
+export const {initUserInfo, changeLoginStatus, login, logout} = userSlice.actions;
 export default userSlice.reducer;

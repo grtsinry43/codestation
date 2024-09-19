@@ -3,8 +3,6 @@ import {NavLink} from "react-router-dom";
 import {Space, Select} from "antd";
 import Search from "antd/es/input/Search";
 import LoginAvatar from "./LoginAvatar";
-import {useDispatch} from "react-redux";
-import {login} from "../redux/userSlice";
 
 function NavHeader(props) {
     const options = [
@@ -12,11 +10,10 @@ function NavHeader(props) {
         {label: '书籍', value: 'book'},
     ];
 
-    const dispatch = useDispatch();
-
     const loginHandle = () => {
-        console.log("模拟登录");
-        dispatch(login({name: "test", avatar: "https://avatars.githubusercontent.com/u/77447646?v=4"}));
+        props.loginHandle();
+        // console.log("模拟登录");
+        // dispatch(login({name: "test", avatar: "https://avatars.githubusercontent.com/u/77447646?v=4"}));
     }
 
     // useEffect(() => {
