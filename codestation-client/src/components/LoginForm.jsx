@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {Modal, Radio, Form, Input, Button, Row, Col, Checkbox, message} from "antd";
 import styles from "../css/LoginForm.module.css";
-import {checkUserIsExist, getCaptcha, registerUser} from "../api/user";
+import {checkUserIsExist, getCaptcha, getUserById, loginUser, registerUser} from "../api/user";
 import {useDispatch} from "react-redux";
 import {changeLoginStatus, initUserInfo} from "../redux/userSlice";
 
@@ -33,6 +33,16 @@ function LoginForm(props) {
     const [value, setValue] = React.useState('login');
     // 登录表单的状态数据
     const loginFormRef = React.useRef();
+
+    const handleReset = () => {
+        if (loginFormRef.current) {
+            loginFormRef.current.resetFields(); // 重置表单字段
+        }
+        if (registerFormRef.current) {
+            registerFormRef.current.resetFields(); // 重置表单字段
+        }
+    };
+
     const [captcha, setCaptcha] = React.useState(null);
     const [loginInfo, setLoginInfo] = React.useState({
         loginId: "",
@@ -58,7 +68,33 @@ function LoginForm(props) {
     }
 
     const loginHandle = () => {
-        console.log('loginHandle');
+        if (!loginInfo.loginId || !loginInfo.loginPwd) {
+            return;
+        }
+        loginUser(loginInfo).then(res => {
+            console.log(res);
+            if (res.data?.data) {
+                if (res.data.data.enabled === false) {
+                    message.warning("用户已被禁用，请联系管理员");
+                    return;
+                }
+                message.success("登录成功");
+                localStorage.setItem("token", res.data.token);
+                getUserById(res.data.data._id).then(res => {
+                    dispatch(initUserInfo(res.data));
+                });
+                dispatch(changeLoginStatus(true));
+                handleCancel();
+            } else {
+                if (!res.msg) {
+                    message.error("帐号或密码错误");
+                    captchaClickHandle();
+                    return;
+                }
+                message.warning(res.msg);
+                captchaClickHandle();
+            }
+        });
     }
 
     const registerHandle = () => {
@@ -108,7 +144,6 @@ function LoginForm(props) {
             <div className={styles.container}>
                 <Form
                     name="basic1"
-                    autoComplete="off"
                     onFinish={loginHandle}
                     ref={loginFormRef}
                 >
@@ -124,6 +159,7 @@ function LoginForm(props) {
                     >
                         <Input
                             placeholder="请输入你的登录账号"
+                            autoComplete="username"
                             value={loginInfo.loginId}
                             onChange={(e) => updateInfo(loginInfo, e.target.value, 'loginId', setLoginInfo)}
                         />
@@ -141,6 +177,7 @@ function LoginForm(props) {
                     >
                         <Input.Password
                             placeholder="请输入你的登录密码，新用户默认为123456"
+                            autoComplete="current-password"
                             value={loginInfo.loginPwd}
                             onChange={(e) => updateInfo(loginInfo, e.target.value, 'loginPwd', setLoginInfo)}
                         />
@@ -209,6 +246,7 @@ function LoginForm(props) {
                                 captcha: "",
                                 remember: false
                             });
+                            handleReset();
                         }}>
                             重置
                         </Button>
@@ -304,6 +342,7 @@ function LoginForm(props) {
                                 nickname: "",
                                 captcha: "",
                             });
+                            handleReset();
                         }}>
                             重置
                         </Button>

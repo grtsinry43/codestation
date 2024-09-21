@@ -1,11 +1,24 @@
 import React from 'react';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Avatar, Button, Image, List, Popover} from "antd";
+import {changeLoginStatus, clearUserInfo} from "../redux/userSlice";
 
 function LoginAvatar(props) {
 
     const user = useSelector(state => state.user);
     console.log(user);
+    const dispatch = useDispatch();
+
+    const listClickHandle = (item) => {
+        if (item === "退出登录") {
+            localStorage.removeItem("token");
+            dispatch(changeLoginStatus(false));
+            dispatch(clearUserInfo());
+            window.location.reload();
+        } else {
+            window.location.href = "/user";
+        }
+    }
 
     if (user.isLogin) {
         const content = (
@@ -13,13 +26,14 @@ function LoginAvatar(props) {
                 dataSource={["个人中心", "退出登录"]}
                 size="large"
                 renderItem={item => (
-                    <List.Item style={{cursor: "pointer"}}>{item}</List.Item>
+                    <List.Item onClick={() => listClickHandle(item)} style={{cursor: "pointer"}}>{item}</List.Item>
                 )}
             />
         );
         return (
             <Popover content={content}>
-                <Avatar style={{cursor: "pointer"}} size="large" src={<Image src={user.userInfo?.avatar} preview={false}/>}/>
+                <Avatar style={{cursor: "pointer"}} size="large"
+                        src={<Image src={user.userInfo?.avatar} preview={false}/>}/>
             </Popover>
         );
     } else {
