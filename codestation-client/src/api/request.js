@@ -11,7 +11,6 @@ ins.interceptors.request.use((config) => {
     if (token) {
         config.headers.Authorization = "Bearer " + token;
     }
-    console.log(config.headers.Authorization)
     return config
 }, (err) => {
     console.log("请求失败", err);

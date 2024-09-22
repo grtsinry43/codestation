@@ -8,7 +8,7 @@ function Router(props) {
     return useRoutes([
         {
             path: "/issues",
-            element: <Issues/>
+            element: <Issues showLoginModal={props.showLoginModal}/>
         },
         {
             path: "/books",
