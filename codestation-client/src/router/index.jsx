@@ -3,6 +3,7 @@ import {Navigate, useRoutes} from "react-router";
 import Issues from "../pages/Issues";
 import Books from "../pages/Books";
 import Interviews from "../pages/Interviews";
+import AddIssue from "../pages/AddIssue";
 
 function Router(props) {
     return useRoutes([
@@ -21,6 +22,10 @@ function Router(props) {
         {
             path: "/",
             element: <Navigate replace to="/issues"/>
+        },
+        {
+            path: "/addIssue",
+            element: <AddIssue/>
         }
     ])
 }

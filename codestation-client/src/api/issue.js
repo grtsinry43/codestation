@@ -10,3 +10,13 @@ export function getIssueByPage(params) {
     });
 }
 
+export function addIssue(data) {
+    return request({
+        url: "/api/issue",
+        method: "POST",
+        data: {
+            ...data,
+        },
+    });
+}
+
