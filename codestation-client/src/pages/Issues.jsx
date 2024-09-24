@@ -5,6 +5,8 @@ import IssueItem from "../components/IssueItem";
 import {getIssueByPage} from "../api/issue";
 import {Pagination} from "antd";
 import AddIssueButton from "../components/AddIssueButton";
+import Recommend from "../components/Recommend";
+import ScoreRank from "../components/ScoreRank";
 
 function Issues(props) {
     const [issueInfo, setIssueInfo] = React.useState([]);
@@ -71,6 +73,8 @@ function Issues(props) {
                 {/*右面区域*/}
                 <div className={styles.rightSide}>
                     <AddIssueButton showLoginModal={props.showLoginModal}/>
+                    <Recommend/>
+                    <ScoreRank/>
                 </div>
             </div>
         </div>

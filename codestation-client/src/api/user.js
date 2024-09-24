@@ -23,3 +23,7 @@ export function getUserById(id) {
 export function getLoginStatus() {
     return request.get("/api/user/whoami");
 }
+
+export function getUserByPointsRank() {
+    return request.get("/api/user/pointsrank");
+}

@@ -16,17 +16,17 @@
     /* outline: 1px solid blue; */
 }
 
-.rank{
+.rank {
     width: 22px;
     height: 100%;
     text-align: center;
-    line-height:30px;
+    line-height: 30px;
     font-size: 16px;
     /* outline: 1px solid red; */
 }
 
-.avatar{
-    margin:0 15px;
+.avatar {
+    margin: 0 15px;
 }
 
 .right {
