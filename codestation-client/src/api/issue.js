@@ -20,3 +20,10 @@ export function addIssue(data) {
     });
 }
 
+export function getIssueById(id) {
+    return request({
+        url: `/api/issue/${id}`,
+        method: "GET",
+    });
+}
+

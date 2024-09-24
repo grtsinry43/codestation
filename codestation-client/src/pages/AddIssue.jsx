@@ -8,11 +8,13 @@ import {useDispatch, useSelector} from "react-redux";
 import {getTypeList} from "../redux/typeListSlice";
 import {typeOptionCreator} from "../utils/tools";
 import {addIssue} from "../api/issue";
+import {useNavigate} from "react-router";
 
 function AddIssue(props) {
     const formRef = useRef();
     const editorRef = useRef();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const userInfo = useSelector(state => state.user.userInfo);
 
@@ -24,6 +26,7 @@ function AddIssue(props) {
             userId: userInfo._id,
             typeId: issueInfo.typeId,
         }).then(async (res) => {
+            console.log(res);
             if (res.data) {
                 message.success("你的问题已经提交，审核通过后将会进行展示");
                 formRef.current.resetFields();
@@ -33,7 +36,10 @@ function AddIssue(props) {
                     userId: "",
                     typeId: "",
                 });
+
                 editorRef.current.getInstance().setHTML('');
+                // 跳转到首页
+                navigate("/");
             } else {
                 message.error(res.msg);
             }
