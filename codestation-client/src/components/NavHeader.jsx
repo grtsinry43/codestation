@@ -3,6 +3,7 @@ import {NavLink} from "react-router-dom";
 import {Space, Select} from "antd";
 import Search from "antd/es/input/Search";
 import LoginAvatar from "./LoginAvatar";
+import {Navigate} from "react-router";
 
 function NavHeader(props) {
     const options = [
@@ -28,7 +29,9 @@ function NavHeader(props) {
         <div className="headerContainer">
             {/*头部logo*/}
             <div className="logoContainer">
-                <div className="logo"></div>
+                <div className="logo">
+                    <NavLink to="/"/>
+                </div>
             </div>
             {/*头部导航*/}
             <nav className="navContainer">

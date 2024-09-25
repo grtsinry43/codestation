@@ -8,6 +8,7 @@ import Recommend from "../components/Recommend";
 import {formatDate} from "../utils/tools";
 import {getUserById} from "../api/user";
 import {Avatar} from "antd";
+import Discuss from "../components/Discuss";
 
 function IssueDetail(props) {
     const [issueInfo, setIssueInfo] = useState(null);
@@ -46,6 +47,7 @@ function IssueDetail(props) {
                             <div dangerouslySetInnerHTML={{__html: issueInfo?.issueContent}}></div>
                         </div>
                     </div>
+                    <Discuss commentType={1} targetId={issueInfo?._id}/>
                 </div>
                 {/*右侧*/}
                 <div className={styles.rightSide}>
