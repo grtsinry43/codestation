@@ -7,6 +7,8 @@ import {Pagination} from "antd";
 import AddIssueButton from "../components/AddIssueButton";
 import Recommend from "../components/Recommend";
 import ScoreRank from "../components/ScoreRank";
+import TypeSelect from "../components/TypeSelect";
+import {useSelector} from "react-redux";
 
 function Issues(props) {
     const [issueInfo, setIssueInfo] = React.useState([]);
@@ -16,12 +18,22 @@ function Issues(props) {
         total: 0
     });
 
+    const {issueTypeId} = useSelector(state => state.typeList);
+
+    let searchParams = {
+        current: pageInfo.current,
+        pageSize: pageInfo.pageSize,
+        issueStatus: true
+    };
+    if (issueTypeId !== "all") {
+        searchParams.typeId = issueTypeId;
+        searchParams.current = 1;
+    }
+
     useEffect(() => {
         async function fetchData() {
             const {data} = await getIssueByPage({
-                current: pageInfo.current,
-                pageSize: pageInfo.pageSize,
-                issueStatus: true
+                ...searchParams
             });
             setIssueInfo(data.data);
             setPageInfo({
@@ -32,7 +44,7 @@ function Issues(props) {
         }
 
         fetchData();
-    }, [pageInfo.current, pageInfo.pageSize]);
+    }, [pageInfo.current, pageInfo.pageSize, issueTypeId]);
 
     let issueList = [];
     for (let i = 0; i < issueInfo.length; i++) {
@@ -52,23 +64,29 @@ function Issues(props) {
     return (
         <div className="container">
             {/*头部区域*/}
-            <PageHeader title="问答列表"/>
+            <PageHeader title="问答列表">
+                <TypeSelect/>
+            </PageHeader>
             {/*内容区域*/}
             <div className={styles.issueContainer}>
                 {/*左面区域*/}
                 <div className={styles.leftSide}>
                     {issueList}
                     {/*翻页组件*/}
-                    <div className="paginationContainer">
-                        <Pagination
-                            showQuickJumper
-                            defaultCurrrent={1}
-                            {...pageInfo}
-                            showSizeChanger
-                            pageSizeOptions={['5', '10', '20']}
-                            onChange={handlePageChange}
-                        />
-                    </div>
+                    {
+                        issueInfo.length > 0 ? <div className="paginationContainer">
+                            <Pagination
+                                showQuickJumper
+                                defaultCurrrent={1}
+                                {...pageInfo}
+                                showSizeChanger
+                                pageSizeOptions={['5', '10', '20']}
+                                onChange={handlePageChange}
+                            />
+                        </div> : (
+                            <div className={styles.noIssue}>有问题，就来coder station！</div>
+                        )
+                    }
                 </div>
                 {/*右面区域*/}
                 <div className={styles.rightSide}>

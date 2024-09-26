@@ -14,6 +14,7 @@ function PageHeader(props) {
                 {props.title}
             </div>
             {/*分类选择组件*/}
+            {props.children}
         </div>
     );
 }
