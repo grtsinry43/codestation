@@ -9,3 +9,13 @@ export function getIssueCommentById(id, params) {
         },
     });
 }
+
+export function addComment(data) {
+    return request({
+        url: "/api/comment",
+        method: "POST",
+        data: {
+            ...data,
+        },
+    });
+}

@@ -27,3 +27,7 @@ export function getLoginStatus() {
 export function getUserByPointsRank() {
     return request.get("/api/user/pointsrank");
 }
+
+export function updateUser(id, data) {
+    return request.patch(`/api/user/${id}`, data);
+}

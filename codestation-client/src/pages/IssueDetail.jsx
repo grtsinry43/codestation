@@ -47,7 +47,9 @@ function IssueDetail(props) {
                             <div dangerouslySetInnerHTML={{__html: issueInfo?.issueContent}}></div>
                         </div>
                     </div>
-                    <Discuss commentType={1} targetId={issueInfo?._id}/>
+                    <Discuss commentType={1}
+                             issueInfo={issueInfo}
+                             targetId={issueInfo?._id}/>
                 </div>
                 {/*右侧*/}
                 <div className={styles.rightSide}>

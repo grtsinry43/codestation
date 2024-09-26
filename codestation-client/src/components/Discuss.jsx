@@ -1,30 +1,77 @@
 import React, {useEffect, useRef, useState} from 'react';
 import styles from '../css/Discuss.module.css';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {UserOutlined} from '@ant-design/icons';
 import "@toast-ui/editor/dist/i18n/zh-cn";
-import {Avatar, Button, List} from 'antd';
+import {Avatar, Button, List, message, Pagination} from 'antd';
 import {Editor} from '@toast-ui/react-editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
-import {getIssueCommentById} from "../api/comment";
+import {addComment, getIssueCommentById} from "../api/comment";
 import {getUserById} from "../api/user";
 import {formatDate} from "../utils/tools";
-
+import {updateIssue} from "../api/issue";
+import {updateUserInfoAsync} from "../redux/userSlice";
 
 function Discuss(props) {
     const {userInfo, isLogin} = useSelector(state => state.user);
     const [commentList, setCommentList] = useState([]);
+    const [refresh, setRefresh] = useState(false);
     const [pageInfo, setPageInfo] = useState({
         current: 1,
         pageSize: 10,
         total: 0
     });
+    const dispatch = useDispatch();
+
+    const editorRef = useRef();
+
+    const handleSubmit = () => {
+        let newComment = editorRef.current.getInstance().getHTML();
+        if (newComment === "<p><br></p>") {
+            newComment = "";
+        }
+
+        if (!newComment) {
+            message.warning("请输入评论内容");
+            return;
+        }
+
+        addComment({
+            commentContent: newComment,
+            commentType: props.commentType,
+            targetId: props.targetId,
+            userId: userInfo._id,
+            issueId: props.targetId,
+            typeId: props.issueInfo ? props.issueInfo.typeId : props.bookInfo.bookId
+        }).then(res => {
+            if (res.code === 0) {
+                message.success("评论成功，积分+4");
+                editorRef.current.getInstance().setHTML('');
+                setRefresh(!refresh);
+                setPageInfo(prev => ({
+                    ...prev,
+                    total: prev.total + 1
+                }));
+                updateIssue(props.targetId, {
+                    commentNumber: pageInfo.total + 1
+                });
+                // 更新积分的变化
+                dispatch(updateUserInfoAsync({
+                    userId: userInfo._id,
+                    newInfo: {
+                        points: userInfo.points + 4
+                    }
+                }));
+            } else {
+                message.error("评论失败");
+            }
+        });
+    };
 
     useEffect(() => {
-        async function fetchCommentList() {
+        const fetchComments = async () => {
             let data = null;
             if (props.commentType === 1) {
-                // 传递过来的是问答的 id，所以需要获取该问答 id 所对应的评论
                 const result = await getIssueCommentById(props.targetId, {
                     current: pageInfo.current,
                     pageSize: pageInfo.pageSize
@@ -33,34 +80,30 @@ function Discuss(props) {
             } else if (props.commentType === 2) {
                 // 传递过来的是书籍的 id，所以需要获取该书籍 id 所对应的评论
             }
+
             for (let i = 0; i < data.data.length; i++) {
                 const result = await getUserById(data.data[i].userId);
-                // 将用户的信息添加到评论对象上面
                 data.data[i].userInfo = result.data;
             }
-            // 更新评论数据
+
             setCommentList(data.data);
-            // 更新分页数据
             setPageInfo({
-                currentPage: data.currentPage,
-                eachPage: data.eachPage,
-                count: data.count,
-                totalPage: data.totalPage
-            })
-        }
+                current: data.currentPage,
+                pageSize: data.eachPage,
+                total: data.count
+            });
+        };
 
         if (props.targetId) {
-            fetchCommentList();
+            fetchComments();
         }
-    }, [props.targetId]);
+    }, [props.targetId, refresh, pageInfo.current, pageInfo.pageSize]);
 
-    const editorRef = useRef();
-    let avatar = null;
-    if (isLogin) {
-        avatar = (<Avatar size="large" src={userInfo.avatar}/>);
-    } else {
-        avatar = (<Avatar icon={<UserOutlined/>}/>);
-    }
+    const avatar = isLogin && userInfo ? (
+        <Avatar size="large" src={userInfo.avatar}/>
+    ) : (
+        <Avatar icon={<UserOutlined/>}/>
+    );
 
     return (
         <div className="container">
@@ -84,15 +127,16 @@ function Discuss(props) {
                         ref={editorRef}
                     />
                     <div className={styles.commentFooter}>
-                        <Button className={styles.commentBtn} type="primary">发表评论</Button>
+                        <Button
+                            onClick={handleSubmit}
+                            className={styles.commentBtn} type="primary">发表评论</Button>
                     </div>
                 </div>
             </div>
             {/*评论列表*/}
-            {
-                commentList?.length > 0 &&
+            {commentList.length > 0 && (
                 <List
-                    header={`共 ${pageInfo.count} 条评论`}
+                    header={`共 ${pageInfo.total} 条评论`}
                     dataSource={commentList}
                     itemLayout="horizontal"
                     renderItem={item => (
@@ -108,7 +152,33 @@ function Discuss(props) {
                         </List.Item>
                     )}
                 />
-            }
+            )}
+            {/*分页组件*/}
+            {commentList.length > 0 && (
+                <div className={styles.paginationContainer}>
+                    <Pagination
+                        current={pageInfo.current}
+                        pageSize={pageInfo.pageSize}
+                        total={pageInfo.total}
+                        showSizeChanger
+                        showQuickJumper
+                        onChange={(page, pageSize) => {
+                            setPageInfo({
+                                ...pageInfo,
+                                current: page,
+                                pageSize: pageSize
+                            });
+                        }}
+                        onShowSizeChange={(current, size) => {
+                            setPageInfo({
+                                ...pageInfo,
+                                current: current,
+                                pageSize: size
+                            });
+                        }}
+                    />
+                </div>
+            )}
         </div>
     );
 }

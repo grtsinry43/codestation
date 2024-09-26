@@ -27,3 +27,13 @@ export function getIssueById(id) {
     });
 }
 
+export function updateIssue(id, data) {
+    return request({
+        url: `/api/issue/${id}`,
+        method: "PATCH",
+        data: {
+            ...data,
+        },
+    });
+}
+
