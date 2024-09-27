@@ -5,6 +5,7 @@ import Books from "../pages/Books";
 import Interviews from "../pages/Interviews";
 import AddIssue from "../pages/AddIssue";
 import IssueDetail from "../pages/IssueDetail";
+import SearchPage from "../pages/searchPage";
 
 function Router(props) {
     return useRoutes([
@@ -31,6 +32,10 @@ function Router(props) {
         {
             path: "/issues/:id",
             element: <IssueDetail/>
+        },
+        {
+            path: "/search",
+            element: <SearchPage/>
         }
     ])
 }
