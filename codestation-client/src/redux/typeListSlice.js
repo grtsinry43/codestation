@@ -1,7 +1,7 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
 import {getType} from "../api/type";
 
-export const getTypeList = createAsyncThunk(
+export const getTypeListAsync = createAsyncThunk(
     "type/getTypeList",
     async () => {
         const response = await getType();
@@ -28,7 +28,7 @@ const typeListSlice = createSlice({
     },
     // 专门处理异步的 reducer
     extraReducers: (builder) => {
-        builder.addCase(getTypeList.fulfilled, (state, {payload}) => {
+        builder.addCase(getTypeListAsync.fulfilled, (state, {payload}) => {
             state.typeList = payload;
         });
     },

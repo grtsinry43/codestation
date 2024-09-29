@@ -5,7 +5,7 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import "@toast-ui/editor/dist/i18n/zh-cn";
 import {Button, Form, Input, Select, message} from "antd";
 import {useDispatch, useSelector} from "react-redux";
-import {getTypeList} from "../redux/typeListSlice";
+import {getTypeListAsync} from "../redux/typeListSlice";
 import {typeOptionCreator} from "../utils/tools";
 import {addIssue} from "../api/issue";
 import {useNavigate} from "react-router";
@@ -59,7 +59,7 @@ function AddIssue(props) {
 
     useEffect(() => {
         if (!typeList.length) {
-            dispatch(getTypeList());
+            dispatch(getTypeListAsync());
         }
     }, [typeList, dispatch]);
 

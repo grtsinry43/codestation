@@ -4,7 +4,7 @@ import {Tag} from "antd";
 import {formatDate} from "../utils/tools";
 import {useDispatch, useSelector} from "react-redux";
 import {getUserById} from "../api/user";
-import {getTypeList} from "../redux/typeListSlice";
+import {getTypeListAsync} from "../redux/typeListSlice";
 import {useNavigate} from "react-router";
 
 function IssueItem(props) {
@@ -16,7 +16,7 @@ function IssueItem(props) {
     useEffect(() => {
         if (!typeList.length) {
             // 派发 action 来发送请求，获取到数据填充到状态仓库
-            dispatch(getTypeList());
+            dispatch(getTypeListAsync());
         }
 
         // 发送请求获取用户的信息

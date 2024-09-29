@@ -4,8 +4,10 @@ import styles from "../css/LoginForm.module.css";
 import {checkUserIsExist, getCaptcha, getUserById, loginUser, registerUser} from "../api/user";
 import {useDispatch} from "react-redux";
 import {changeLoginStatus, initUserInfo} from "../redux/userSlice";
+import {useNavigate} from "react-router";
 
 function LoginForm(props) {
+    const navigate = useNavigate();
     const handleOK = () => {
         props.closeModal();
     }
@@ -85,6 +87,9 @@ function LoginForm(props) {
                 });
                 dispatch(changeLoginStatus(true));
                 handleCancel();
+                if (props.redirectPath) {
+                    navigate(props.redirectPath);
+                }
             } else {
                 if (!res.msg) {
                     message.error("帐号或密码错误");
@@ -222,7 +227,7 @@ function LoginForm(props) {
                         <Checkbox
                             onChange={(e) => updateInfo(loginInfo, e.target.checked, 'remember', setLoginInfo)}
                             checked={loginInfo.remember}
-                        >记住我</Checkbox>
+                        > 记住我 </Checkbox>
                     </Form.Item>
 
                     <Form.Item
@@ -364,10 +369,10 @@ function LoginForm(props) {
                                  captchaClickHandle();
                              }}
                              value={value}>
-                    <Radio.Button className={styles.radioButton} value="login">登录</Radio.Button>
-                    <Radio.Button className={styles.radioButton} value="register">注册</Radio.Button>
+                    <Radio.Button className={styles.radioButton} value="login"> 登录 </Radio.Button>
+                    <Radio.Button className={styles.radioButton} value="register"> 注册 </Radio.Button>
                 </Radio.Group>
-                {/*下面要显示登录或注册表单*/}
+                {/* 下面要显示登录或注册表单 */}
                 {loginForm}
             </Modal>
         </>

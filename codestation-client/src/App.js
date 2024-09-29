@@ -2,7 +2,7 @@ import './css/App.css';
 import NavHeader from "./components/NavHeader";
 import PageFooter from "./components/PageFooter";
 import {Layout, message} from "antd";
-import Router from "./router";
+import RouterBefore from "./router/RouterBefore";
 import LoginForm from "./components/LoginForm";
 import {useEffect, useState} from "react";
 import {getLoginStatus, getUserById} from "./api/user";
@@ -56,7 +56,7 @@ function App() {
                     <NavHeader loginHandle={showLoginModal}/>
                 </Header>
                 <Content className="content">
-                    <Router showLoginModal={showLoginModal}/>
+                    <RouterBefore showLoginModal={showLoginModal}/>
                 </Content>
                 <Footer className="footer">
                     <PageFooter/>

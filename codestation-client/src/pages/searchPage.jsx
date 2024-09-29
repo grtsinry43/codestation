@@ -61,7 +61,7 @@ function SearchPage(props) {
                     {
                         searchResult.length > 0 ? searchResult.map(item=>{
                             return <SearchResultItem info={item} key={item._id}/>
-                        }) : <div>暂无搜索结果</div>
+                        }) : <div className={styles.noResult}>未搜索到符合条件的结果</div>
                     }
                 </div>
                 {/* 右边部分 */}

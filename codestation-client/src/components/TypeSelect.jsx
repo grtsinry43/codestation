@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {changeBookTypeId, changeIssueTypeId, getTypeList} from "../redux/typeListSlice";
+import {changeBookTypeId, changeIssueTypeId, getTypeListAsync} from "../redux/typeListSlice";
 import {Tag} from "antd";
 import {useLocation} from "react-router-dom";
 
@@ -20,7 +20,7 @@ function TypeSelect(props) {
     }
     useEffect(() => {
         if (!typeList.length) {
-            dispatch(getTypeList());
+            dispatch(getTypeListAsync());
         } else {
             let arr = [
                 <Tag key="all"
