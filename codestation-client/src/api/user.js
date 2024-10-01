@@ -28,6 +28,13 @@ export function getUserByPointsRank() {
     return request.get("/api/user/pointsrank");
 }
 
-export function updateUser(id, data) {
+export function editUser(id, data) {
     return request.patch(`/api/user/${id}`, data);
+}
+
+export function checkPassword(id, password) {
+    return request.post(`/api/user/passwordcheck`, {
+        userId: id,
+        loginPwd: password
+    });
 }

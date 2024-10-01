@@ -2,8 +2,10 @@ import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {Avatar, Button, Image, List, Popover} from "antd";
 import {changeLoginStatus, clearUserInfo} from "../redux/userSlice";
+import {useNavigate} from "react-router";
 
 function LoginAvatar(props) {
+    const navigate = useNavigate();
 
     const user = useSelector(state => state.user);
     console.log(user);
@@ -16,7 +18,7 @@ function LoginAvatar(props) {
             dispatch(clearUserInfo());
             window.location.reload();
         } else {
-            window.location.href = "/user";
+            navigate("/personal");
         }
     }
 
@@ -40,7 +42,7 @@ function LoginAvatar(props) {
         // 没有登录
         return (
             <>
-                <Button type="primary" size="large" onClick={props.loginHandle}>注册/登录</Button>
+                <Button type="primary" size="large" onClick={props.loginHandle}> 注册 / 登录 </Button>
             </>
         );
     }

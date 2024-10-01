@@ -6,6 +6,7 @@ import Interviews from "../pages/Interviews";
 import AddIssue from "../pages/AddIssue";
 import IssueDetail from "../pages/IssueDetail";
 import SearchPage from "../pages/searchPage";
+import Personal from "../pages/Personal";
 
 function Router(props) {
     return useRoutes([
@@ -36,6 +37,10 @@ function Router(props) {
         {
             path: "/search",
             element: <SearchPage/>
+        },
+        {
+            path: "/personal",
+            element: <Personal/>
         }
     ])
 }

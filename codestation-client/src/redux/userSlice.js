@@ -1,14 +1,14 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {updateUser} from "../api/user";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { editUser } from "../api/user"
 
 export const updateUserInfoAsync = createAsyncThunk(
     "user/updateUserInfoAsync",
     async (payload, thunkApi) => {
-        console.log(payload, 'payload~~');
-        await updateUser(payload.userId, payload.newInfo);
+        await editUser(payload.userId, payload.newInfo);
         thunkApi.dispatch(updateUserInfo(payload.newInfo));
     }
 );
+
 
 const userSlice = createSlice({
     name: "user",
@@ -17,32 +17,27 @@ const userSlice = createSlice({
         userInfo: {},
     },
     reducers: {
-        initUserInfo: (state, action) => {
-            state.userInfo = action.payload;
+        // 初始化用户信息
+        initUserInfo: (state, { payload }) => {
+            state.userInfo = payload;
         },
-        changeLoginStatus: (state, action) => {
-            state.isLogin = action.payload;
+        // 修改用户登录状态
+        changeLoginStatus: (state, { payload }) => {
+            state.isLogin = payload;
         },
-        clearUserInfo: (state) => {
+        // 清除用户信息
+        clearUserInfo : (state, { payload }) => {
             state.userInfo = {};
         },
-        updateUserInfo: (state, action) => {
-            state.userInfo = {
-                ...state.userInfo,
-                ...action.payload
-            };
+        // 更新用户信息
+        updateUserInfo: (state, { payload }) => {
+            for(let key in payload){
+                state.userInfo[key] = payload[key];
+            }
         }
     },
-    extraReducers: (builder) => {
-        builder
-            .addCase(updateUserInfoAsync.fulfilled, (state, action) => {
-                state.userInfo = {
-                    ...state.userInfo,
-                    ...action.payload
-                };
-            });
-    }
 });
 
-export const {initUserInfo, changeLoginStatus, clearUserInfo, updateUserInfo} = userSlice.actions;
+export const { initUserInfo,changeLoginStatus, clearUserInfo, updateUserInfo } = userSlice.actions;
 export default userSlice.reducer;
+
