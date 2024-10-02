@@ -1,7 +1,7 @@
 import UserController from '@/services/admin';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { useDispatch, useSelector } from '@umijs/max';
-import { Button, Image, Switch, Tag, message } from 'antd';
+import { Button, Image, message, Modal, Switch, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 const Admin: React.FC = () => {
@@ -22,11 +22,10 @@ const Admin: React.FC = () => {
   };
 
   useEffect(() => {
-    // 仅在三个状态 (isLoading) 都加载完毕后才重新加载列表
     if (!Object.values(loading).some((v) => v)) {
       fetchAdminList();
     }
-  }, [loading]); // 保持切换状态时刷新
+  }, [loading]);
 
   const handleBatchAction = () => {
     console.log('Selected Row Keys:', selectedRowKeys);
@@ -40,7 +39,6 @@ const Admin: React.FC = () => {
         checked + '',
       );
       if (data.modifiedCount === 1) {
-        console.log('Status Updated:', checked);
         if (checked) {
           message.success('帐号已启用');
         } else {
@@ -54,6 +52,31 @@ const Admin: React.FC = () => {
     } finally {
       setLoading((prev) => ({ ...prev, [record._id]: false }));
     }
+  };
+
+  const handleDelete = async (_id: string) => {
+    setLoading((prev) => ({ ...prev, [_id]: true }));
+    try {
+      const { data } = await UserController.deleteAdmin(_id);
+      if (data.deletedCount === 1) {
+        message.success('管理员已删除');
+      } else {
+        message.error('删除失败，请重试');
+      }
+    } catch (error) {
+      message.error('删除失败');
+    } finally {
+      setLoading((prev) => ({ ...prev, [_id]: false }));
+    }
+  };
+
+  const confirmDelete = (_id: string) => {
+    Modal.confirm({
+      title: '确认删除',
+      content: '确定要删除这个管理员吗？删除后将无法恢复',
+      onOk: () => handleDelete(_id),
+      okButtonProps: { danger: true },
+    });
   };
 
   const columns: any = [
@@ -125,10 +148,24 @@ const Admin: React.FC = () => {
       valueType: 'option',
       key: 'option',
       align: 'center',
-      render: (_: any, record: any) => [
-        <a key={`edit-${record.id}`}> 编辑 </a>,
-        <a key={`delete-${record.id}`}> 删除 </a>,
-      ],
+      render: (_: any, record: any) => (
+        <div
+          className="action-container"
+          style={{
+            display: 'flex',
+            justifyContent: 'space-around',
+          }}
+        >
+          <a key={`edit-${record.id}`}> 编辑 </a>
+          <a
+            key={`delete-${record.id}`}
+            onClick={() => confirmDelete(record._id)}
+          >
+            {' '}
+            删除{' '}
+          </a>
+        </div>
+      ),
     },
   ];
 

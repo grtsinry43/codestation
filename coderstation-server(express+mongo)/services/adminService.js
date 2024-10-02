@@ -79,6 +79,7 @@ module.exports.loginService = async function (loginInfo) {
  * @returns
  */
 module.exports.addAdminService = async function (newAdminInfo) {
+  console.log(newAdminInfo);
   // 首先需要进行验证，验证通过后才能添加至数据库
   return validate.async(newAdminInfo, adminRule).then(
     async function () {
