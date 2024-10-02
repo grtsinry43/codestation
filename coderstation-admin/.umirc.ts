@@ -3,11 +3,12 @@ import { defineConfig } from '@umijs/max';
 export default defineConfig({
   antd: {},
   access: {},
+  dva: {},
   model: {},
   initialState: {},
   request: {},
   layout: {
-    title: '@umijs/max',
+    title: 'CoderStation Admin',
   },
   routes: [
     {
@@ -55,43 +56,60 @@ export default defineConfig({
       ],
     },
     {
-      name : "书籍",
-      path : "/book",
+      name: '书籍',
+      path: '/book',
       icon: 'ReadOutlined',
-      routes : [{
-        path : "bookList",
-        name : "书籍列表",
-        component: './Book',
-      },{
-        path : "/book/add",
-        name : "添加书籍",
-        component: './Book/AddBook',
-      }]
+      routes: [
+        {
+          path: 'bookList',
+          name: '书籍列表',
+          component: './Book',
+        },
+        {
+          path: '/book/add',
+          name: '添加书籍',
+          component: './Book/AddBook',
+        },
+      ],
     },
     {
-      name : "面试题",
-      path : "/interview",
+      name: '面试题',
+      path: '/interview',
       icon: 'EditOutlined',
-      component: './Interview'
+      component: './Interview',
     },
     {
-      name : "问答",
-      path : "/issue",
+      name: '问答',
+      path: '/issue',
       icon: 'ProfileOutlined',
-      component: './Issue'
+      component: './Issue',
     },
     {
-      name : "评论",
-      path : "/comment",
+      name: '评论',
+      path: '/comment',
       icon: 'CalendarOutlined',
-      component: './Comment'
+      component: './Comment',
     },
     {
-      name : "类型",
-      path : "/type",
+      name: '类型',
+      path: '/type',
       component: './Type',
       icon: 'AppstoreOutlined',
-    }
+    },
   ],
   npmClient: 'pnpm',
+  proxy: {
+    '/api': {
+      target: 'http://127.0.0.1:7001',
+      changeOrigin: true,
+    },
+    '/static': {
+      target: 'http://127.0.0.1:7001',
+      changeOrigin: true,
+    },
+    '/res': {
+      target: 'http://127.0.0.1:7001',
+      changeOrigin: true,
+    },
+  },
 });
