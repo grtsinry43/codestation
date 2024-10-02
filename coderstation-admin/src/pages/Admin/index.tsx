@@ -1,4 +1,3 @@
-import UserController from '@/services/admin';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { useDispatch, useSelector } from '@umijs/max';
 import { Button, Image, message, Modal, Switch, Tag } from 'antd';
@@ -32,42 +31,37 @@ const Admin: React.FC = () => {
   };
 
   const handleStatusChange = async (record: any, checked: boolean) => {
+    console.log('Status Change:', record, checked);
     setLoading((prev) => ({ ...prev, [record._id]: true }));
-    try {
-      const { data } = await UserController.updateAdminStatus(
-        record._id,
-        checked + '',
-      );
-      if (data.modifiedCount === 1) {
+    dispatch({
+      type: 'user/_updateAdmin',
+      payload: {
+        adminInfo: record,
+        newAdminInfo: { enabled: checked },
+      },
+      callback: () => {
         if (checked) {
           message.success('帐号已启用');
         } else {
           message.success('帐号已禁用');
         }
-      } else {
-        message.error('状态更新失败，请重试');
-      }
-    } catch (error) {
-      message.error('状态更新失败');
-    } finally {
-      setLoading((prev) => ({ ...prev, [record._id]: false }));
-    }
+        setLoading((prev) => ({ ...prev, [record._id]: false }));
+      },
+    });
   };
 
   const handleDelete = async (_id: string) => {
     setLoading((prev) => ({ ...prev, [_id]: true }));
-    try {
-      const { data } = await UserController.deleteAdmin(_id);
-      if (data.deletedCount === 1) {
+    dispatch({
+      type: 'user/_deleteAdmin',
+      payload: {
+        _id,
+      },
+      callback: () => {
         message.success('管理员已删除');
-      } else {
-        message.error('删除失败，请重试');
-      }
-    } catch (error) {
-      message.error('删除失败');
-    } finally {
-      setLoading((prev) => ({ ...prev, [_id]: false }));
-    }
+        setLoading((prev) => ({ ...prev, [_id]: false }));
+      },
+    });
   };
 
   const confirmDelete = (_id: string) => {
@@ -149,21 +143,17 @@ const Admin: React.FC = () => {
       key: 'option',
       align: 'center',
       render: (_: any, record: any) => (
-        <div
-          className="action-container"
-          style={{
-            display: 'flex',
-            justifyContent: 'space-around',
-          }}
-        >
-          <a key={`edit-${record.id}`}> 编辑 </a>
-          <a
-            key={`delete-${record.id}`}
+        <div className="action-container">
+          <Button type="link" key={`edit-${record._id}`}>
+            编辑
+          </Button>
+          <Button
+            type="link"
+            key={`delete-${record._id}`}
             onClick={() => confirmDelete(record._id)}
           >
-            {' '}
-            删除{' '}
-          </a>
+            删除
+          </Button>
         </div>
       ),
     },
@@ -180,6 +170,10 @@ const Admin: React.FC = () => {
     <PageContainer>
       <ProTable
         loading={tableLoading}
+        search={false}
+        pagination={{
+          pageSize: 5,
+        }}
         headerTitle={'管理员列表'}
         rowKey={'_id'}
         dataSource={adminList}

@@ -6,12 +6,10 @@ function getAdminList() {
   });
 }
 
-function updateAdminStatus(id: number, status: string) {
+function updateAdmin(id: number, newAdminInfo: any) {
   return request(`/api/admin/${id}`, {
     method: 'PATCH',
-    data: {
-      enabled: status,
-    },
+    data: newAdminInfo,
   });
 }
 
@@ -30,7 +28,7 @@ function addAdmin(data: any) {
 
 export default {
   getAdminList,
-  updateAdminStatus,
+  updateAdmin,
   deleteAdmin,
   addAdmin,
 };
