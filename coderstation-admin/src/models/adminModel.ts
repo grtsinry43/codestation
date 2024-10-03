@@ -13,7 +13,7 @@ interface Action<T = any> {
 }
 
 export default {
-  namespace: 'user',
+  namespace: 'admin',
   state: {
     adminList: [],
     adminInfo: null, // 当前登录的管理员信息

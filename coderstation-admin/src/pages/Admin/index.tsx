@@ -1,3 +1,4 @@
+import AdminForm from '@/pages/Admin/AdminForm';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { useDispatch, useSelector } from '@umijs/max';
 import { Button, Image, message, Modal, Switch, Tag } from 'antd';
@@ -5,15 +6,23 @@ import React, { useEffect, useState } from 'react';
 
 const Admin: React.FC = () => {
   const dispatch = useDispatch();
-  const { adminList } = useSelector((state: any) => state.user);
+  const { adminList } = useSelector((state: any) => state.admin);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [loading, setLoading] = useState<{ [key: string]: boolean }>({});
   const [tableLoading, setTableLoading] = useState<boolean>(true);
+  const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
+  const [currentAdmin, setCurrentAdmin] = useState<any>({});
+
+  const openEditModal = (record: any) => {
+    // 信息清空并回填
+    setCurrentAdmin(record);
+    setEditModalVisible(true);
+  };
 
   const fetchAdminList = () => {
     setTableLoading(true);
     dispatch({
-      type: 'user/_initAdminList',
+      type: 'admin/_initAdminList',
       callback: () => {
         setTableLoading(false);
       },
@@ -34,7 +43,7 @@ const Admin: React.FC = () => {
     console.log('Status Change:', record, checked);
     setLoading((prev) => ({ ...prev, [record._id]: true }));
     dispatch({
-      type: 'user/_updateAdmin',
+      type: 'admin/_updateAdmin',
       payload: {
         adminInfo: record,
         newAdminInfo: { enabled: checked },
@@ -53,7 +62,7 @@ const Admin: React.FC = () => {
   const handleDelete = async (_id: string) => {
     setLoading((prev) => ({ ...prev, [_id]: true }));
     dispatch({
-      type: 'user/_deleteAdmin',
+      type: 'admin/_deleteAdmin',
       payload: {
         _id,
       },
@@ -144,7 +153,11 @@ const Admin: React.FC = () => {
       align: 'center',
       render: (_: any, record: any) => (
         <div className="action-container">
-          <Button type="link" key={`edit-${record._id}`}>
+          <Button
+            type="link"
+            onClick={() => openEditModal(record)}
+            key={`edit-${record._id}`}
+          >
             编辑
           </Button>
           <Button
@@ -197,6 +210,32 @@ const Admin: React.FC = () => {
           reload: fetchAdminList,
         }}
       ></ProTable>
+      <Modal
+        title={'编辑管理员'}
+        open={editModalVisible}
+        onCancel={() => setEditModalVisible(false)}
+        footer={null}
+      >
+        <AdminForm
+          type={'edit'}
+          adminInfo={currentAdmin}
+          setAdminInfo={setCurrentAdmin}
+          submitHandle={() => {
+            dispatch({
+              type: 'admin/_updateAdmin',
+              payload: {
+                adminInfo: currentAdmin,
+                newAdminInfo: currentAdmin,
+              },
+              callback: () => {
+                message.success('管理员信息已更新');
+                setEditModalVisible(false);
+                fetchAdminList();
+              },
+            });
+          }}
+        />
+      </Modal>
     </PageContainer>
   );
 };

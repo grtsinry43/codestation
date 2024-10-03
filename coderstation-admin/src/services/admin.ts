@@ -26,9 +26,19 @@ function addAdmin(data: any) {
   });
 }
 
+/**
+ * 根据 loginId 查找管理员
+ */
+function adminIsExist(loginId: string) {
+  return request(`/api/admin/adminIsExist/${loginId}`, {
+    method: 'GET',
+  });
+}
+
 export default {
   getAdminList,
   updateAdmin,
   deleteAdmin,
   addAdmin,
+  adminIsExist,
 };
