@@ -53,6 +53,12 @@ export default defineConfig({
           path: '/user/add',
           component: './User/AddUser',
         },
+        {
+          name: '修改用户',
+          path: '/user/edit/:id',
+          component: './User/EditUser',
+          hideInMenu: true,
+        },
       ],
     },
     {

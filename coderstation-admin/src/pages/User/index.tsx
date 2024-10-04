@@ -1,10 +1,13 @@
 import UserController from '@/services/user';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, Image, message, Switch } from 'antd';
-import React, { useState } from 'react';
+import { useNavigate } from '@umijs/max';
+import { Button, Image, message, Modal, Switch } from 'antd';
+import React, { useRef, useState } from 'react';
 
 const User: React.FC = () => {
+  const tableRef = useRef<any>();
   const [userList, setUserList] = useState([]);
+  const navigate = useNavigate();
   const [switchLoading, setSwitchLoading] = useState<{
     [key: string]: boolean;
   }>({});
@@ -15,7 +18,33 @@ const User: React.FC = () => {
     total: 0,
   });
 
+  const deleteHandle = (id: string) => {
+    Modal.confirm({
+      title: '确认删除',
+      content: '确认要删除这个用户吗？删除后将无法恢复',
+      okButtonProps: {
+        color: 'danger',
+      },
+      onOk: async () => {
+        const { data } = await UserController.deleteUser(id);
+        if (data.deletedCount === 1) {
+          message.success('删除成功');
+          tableRef.current.reload();
+        }
+      },
+    });
+  };
+
   const columns: any = [
+    {
+      title: '序号',
+      align: 'center',
+      width: 50,
+      search: false,
+      render: (text: string, record: any, index: number) => {
+        return (pageInfo.current - 1) * pageInfo.pageSize + index + 1;
+      },
+    },
     {
       title: '登录帐号',
       dataIndex: 'loginId',
@@ -68,11 +97,7 @@ const User: React.FC = () => {
               if (data.modifiedCount === 1) {
                 message.success(value ? '用户已启用' : '用户已禁用');
                 // 重新请求用户列表数据
-                const { data: newData } = await UserController.getUserList({
-                  current: pageInfo.current,
-                  pageSize: pageInfo.pageSize,
-                });
-                setUserList(newData.data);
+                tableRef.current.reload();
               }
             } finally {
               setSwitchLoading((prev) => ({
@@ -93,10 +118,18 @@ const User: React.FC = () => {
       align: 'center',
       render: (_: any, record: any) => (
         <div className="action-container">
-          <Button type="link" key={`edit-${record._id}`}>
+          <Button
+            type="link"
+            onClick={() => navigate(`/user/edit/${record._id}`)}
+            key={`edit-${record._id}`}
+          >
             编辑
           </Button>
-          <Button type="link" key={`delete-${record._id}`}>
+          <Button
+            type="link"
+            onClick={() => deleteHandle(record._id)}
+            key={`delete-${record._id}`}
+          >
             删除
           </Button>
         </div>
@@ -110,6 +143,7 @@ const User: React.FC = () => {
         headerTitle={'用户列表'}
         dataSource={userList}
         rowKey={'_id'}
+        actionRef={tableRef}
         columns={columns}
         pagination={{
           ...pageInfo,
