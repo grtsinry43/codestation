@@ -53,7 +53,7 @@ function IssueItem(props) {
                             <Tag color={colorArr[typeList.indexOf(type) % colorArr.length]}>{type?.typeName}</Tag>
                         </div>
                         <div className={styles.right}>
-                            <Tag color="volcano">{userInfo.nickname}</Tag>
+                            <Tag color="volcano">{userInfo?.nickname}</Tag>
                             <span>{formatDate(props.issueInfo.issueDate, "year")}</span>
                         </div>
                     </div>

@@ -108,7 +108,24 @@ router.delete("/:id", async function (req, res) {
  * 根据 id 查找用户
  */
 router.get("/:id", async function (req, res) {
-  const result = await findUserByIdService(req.params.id);
+  let result = await findUserByIdService(req.params.id);
+  if (!result) {
+    result = {
+      _id: req.params.id,
+      loginId: null,
+      loginPwd: null,
+      avatar: "/static/avatar/ohmygood.gif",
+      nickname: "用户已注销",
+      mail: null,
+      qq: null,
+      wechat: null,
+      intro: null,
+      registerDate: null,
+      lastLoginDate: null,
+      points: null,
+      enabled: false,
+    };
+  }
   res.send(formatResponse(0, "", result));
 });
 
@@ -137,4 +154,3 @@ router.post("/passwordcheck", async function (req, res, next) {
 });
 
 module.exports = router;
-
