@@ -60,6 +60,7 @@ const User: React.FC = () => {
     {
       title: '头像',
       dataIndex: 'avatar',
+      search: false,
       key: 'avatar',
       align: 'center',
       render: (_: any, record: any) => {
@@ -80,6 +81,7 @@ const User: React.FC = () => {
       title: '帐号状态',
       dataIndex: 'enabled',
       key: 'enabled',
+      search: false,
       align: 'center',
       render: (value: boolean, record: any) => (
         <Switch
@@ -157,9 +159,7 @@ const User: React.FC = () => {
         }}
         request={async (params: any) => {
           const { data } = await UserController.getUserList({
-            current: params.current,
-            pageSize: params.pageSize,
-            loginId: params.loginId,
+            ...params,
           });
           setUserList(data.data);
           return {
