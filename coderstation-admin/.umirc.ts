@@ -76,6 +76,13 @@ export default defineConfig({
           name: '添加书籍',
           component: './Book/AddBook',
         },
+        {
+          path: 'editBook/:id',
+          name: '编辑书籍',
+          component: './Book/EditBook',
+          hideInMenu: true,
+          access: 'NormalAdmin',
+        },
       ],
     },
     {
