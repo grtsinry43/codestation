@@ -108,6 +108,13 @@ export default defineConfig({
       component: './Type',
       icon: 'AppstoreOutlined',
     },
+    {
+      name: '登录',
+      path: '/login',
+      component: './Login',
+      hideInMenu: true,
+      menuRender: false,
+    },
   ],
   npmClient: 'pnpm',
   proxy: {

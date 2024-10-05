@@ -35,10 +35,53 @@ function adminIsExist(loginId: string) {
   });
 }
 
+/**
+ * 获取验证码
+ */
+
+function getCaptcha() {
+  return request('/res/captcha', {
+    method: 'GET',
+  });
+}
+
+/**
+ * 管理员登录
+ */
+function login(loginInfo: any) {
+  return request('/api/admin/login', {
+    method: 'POST',
+    data: loginInfo,
+  });
+}
+
+/**
+ * 恢复登录状态
+ */
+
+function getInfo() {
+  return request('/api/admin/whoami', {
+    method: 'GET',
+  });
+}
+
+/**
+ * 根据 id 获取管理员
+ */
+function getAdminById(adminId: string) {
+  return request(`/api/admin/${adminId}`, {
+    method: 'GET',
+  });
+}
+
 export default {
   getAdminList,
   updateAdmin,
   deleteAdmin,
   addAdmin,
   adminIsExist,
+  getCaptcha,
+  login,
+  getInfo,
+  getAdminById,
 };
