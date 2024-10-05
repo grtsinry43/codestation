@@ -67,7 +67,7 @@ export default defineConfig({
       icon: 'ReadOutlined',
       routes: [
         {
-          path: 'bookList',
+          path: '/book/list',
           name: '书籍列表',
           component: './Book',
         },
@@ -77,11 +77,10 @@ export default defineConfig({
           component: './Book/AddBook',
         },
         {
-          path: 'editBook/:id',
+          path: '/book/edit/:id',
           name: '编辑书籍',
           component: './Book/EditBook',
           hideInMenu: true,
-          access: 'NormalAdmin',
         },
       ],
     },

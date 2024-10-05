@@ -35,7 +35,7 @@ const EditBook: React.FC = () => {
       typeId: bookInfo.typeId,
     });
     // 跳转回首页
-    navigate('/book/bookList');
+    navigate('/book/list');
     message.success('书籍信息修改成功');
   }
 

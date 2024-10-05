@@ -14,6 +14,9 @@ importers:
       '@ant-design/pro-components':
         specifier: ^2.4.4
         version: 2.7.19(antd@5.21.2(date-fns@2.30.0)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(rc-field-form@2.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@toast-ui/editor':
+        specifier: ^3.2.2
+        version: 3.2.2
       '@toast-ui/react-editor':
         specifier: ^3.2.3
         version: 3.2.3(react@18.3.1)

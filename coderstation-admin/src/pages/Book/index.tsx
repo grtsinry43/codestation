@@ -1,6 +1,10 @@
 import BookController from '@/services/book';
-import { formatDate } from '@/utils/tool';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { formatDate, typeOptionCreator } from '@/utils/tool';
+import {
+  PageContainer,
+  ProColumns,
+  ProTable,
+} from '@ant-design/pro-components';
 import { useDispatch, useNavigate, useSelector } from '@umijs/max';
 import { Button, message, Popconfirm, Select, Tag } from 'antd';
 import { useRef, useState } from 'react';
@@ -11,39 +15,44 @@ const Book = () => {
     pageSize: 10,
   });
 
-  const { typeList } = useSelector((state) => state.type);
+  const { typeList } = useSelector((state: any) => state.type);
   const dispatch = useDispatch(); // 获取 dispatch
   const actionRef = useRef();
   const navigate = useNavigate();
 
-  function handleChange(value) {
-    setSearchType({
-      typeId: value,
-    });
-  }
-
   /**
+   * 处理页面变更的函数。
+   * 根据当前页数和每页大小更新分页设置。
    *
-   * @param {*} page 当前页
-   * @param {*} pageSize 每页条数
+   * @param {number} current - 当前页码。
+   * @param {number} pageSize - 每页显示的项目数量。
+   *
+   * @returns {void} 该函数不返回任何值。
    */
-  function handlePageChange(current, pageSize) {
+  function handlePageChange(current: number, pageSize: number): void {
     setPagination({
       current,
       pageSize,
     });
   }
 
-  function deleteHandle(bookInfo) {
+  function deleteHandle(bookInfo: any) {
     BookController.deleteBook(bookInfo._id);
+    // @ts-ignore
     actionRef.current.reload(); // 再次刷新请求
     message.success('删除书籍成功');
   }
 
   // 按类型进行搜索
-  const [searchType, setSearchType] = useState({
-    typeId: null,
+  const [searchType, setSearchType] = useState<{ typeId: string }>({
+    typeId: '',
   });
+
+  function handleChange(value: string) {
+    setSearchType({
+      typeId: value,
+    });
+  }
 
   // 如果类型列表为空，则初始化一次
   if (!typeList.length) {
@@ -52,14 +61,15 @@ const Book = () => {
     });
   }
 
-  const columns = [
+  const columns: ProColumns<any, string>[] = [
     {
       title: '序号',
       align: 'center',
       width: 50,
       search: false,
-      render: (text, record, index) => {
-        return [(pagination.current - 1) * pagination.pageSize + index + 1];
+      // @ts-ignore
+      render: (text: string, record: any, index: number) => {
+        return (pagination.current - 1) * pagination.pageSize + index + 1;
       },
     },
     {
@@ -73,20 +83,16 @@ const Book = () => {
       dataIndex: 'typeId',
       key: 'typeId',
       align: 'center',
-      renderFormItem: (
-        item,
-        { type, defaultRender, formItemProps, fieldProps, ...rest },
-        form,
-      ) => {
+      renderFormItem: () => {
         return (
           <Select placeholder="请选择查询分类" onChange={handleChange}>
             {typeOptionCreator(Select, typeList)}
           </Select>
         );
       },
-      render: (_, row) => {
+      render: (_: any, row: any) => {
         // 寻找对应类型的类型名称
-        const type = typeList.find((item) => item._id === row.typeId);
+        const type = typeList.find((item: any) => item._id === row.typeId);
         return [
           <Tag color="purple" key={row.typeId}>
             {type.typeName}
@@ -101,7 +107,7 @@ const Book = () => {
       align: 'center',
       width: 200,
       search: false,
-      render: (_, row) => {
+      render: (_: any, row: any) => {
         // 将书籍简介的文字进行简化
         // 在表格中显示书籍简介时，过滤掉 html 标签
         let reg = /<[^<>]+>/g;
@@ -142,7 +148,7 @@ const Book = () => {
       key: 'onShelfDate',
       align: 'center',
       search: false,
-      render: (_, row) => {
+      render: (_: any, row: any) => {
         return [formatDate(row.onShelfDate)];
       },
     },
@@ -153,13 +159,13 @@ const Book = () => {
       valueType: 'option',
       fixed: 'right',
       align: 'center',
-      render: (_, row, index, action) => {
+      render: (_: any, row: any) => {
         return [
           <div key={row._id}>
             <Button
               type="link"
               size="small"
-              onClick={() => navigate(`/book/editBook/${row._id}`)}
+              onClick={() => navigate(`/book/edit/${row._id}`)}
             >
               编辑
             </Button>
@@ -191,7 +197,7 @@ const Book = () => {
           params={searchType}
           onReset={() => {
             setSearchType({
-              typeId: null,
+              typeId: '',
             });
           }}
           pagination={{

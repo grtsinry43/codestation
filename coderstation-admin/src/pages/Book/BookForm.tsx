@@ -6,6 +6,10 @@ import type { UploadChangeParam } from 'antd/es/upload';
 import type { UploadFile } from 'antd/es/upload/interface';
 import React, { useEffect, useRef, useState } from 'react';
 
+// toastui-editor 的样式
+import '@toast-ui/editor/dist/i18n/zh-cn';
+import '@toast-ui/editor/dist/toastui-editor.css';
+
 // 定义 props 的类型
 interface BookFormProps {
   type: string;
@@ -16,7 +20,7 @@ interface BookFormProps {
 
 // 定义 typeList 的类型
 interface TypeState {
-  typeList: Array<{ id: number; name: string }>;
+  typeList: Array<{ _id: number; typeName: string }>;
 }
 
 const BookForm: React.FC<BookFormProps> = ({
@@ -32,6 +36,7 @@ const BookForm: React.FC<BookFormProps> = ({
 
   const dispatch = useDispatch();
   const { typeList } = useSelector((state: { type: TypeState }) => state.type);
+  console.log(typeList);
 
   useEffect(() => {
     if (formRef.current && firstIn && bookInfo) {
@@ -149,8 +154,8 @@ const BookForm: React.FC<BookFormProps> = ({
       >
         <Select style={{ width: 200 }} onChange={handleTypeChange}>
           {typeList.map((type) => (
-            <Select.Option value={type.id} key={type.id}>
-              {type.name}
+            <Select.Option value={type._id} key={type._id}>
+              {type.typeName}
             </Select.Option>
           ))}
         </Select>
