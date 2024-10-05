@@ -1,6 +1,6 @@
 import AdminForm from '@/pages/Admin/AdminForm';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { useDispatch, useSelector } from '@umijs/max';
+import { useDispatch, useModel, useSelector } from '@umijs/max';
 import { Button, Image, message, Modal, Switch, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 
@@ -12,6 +12,8 @@ const Admin: React.FC = () => {
   const [tableLoading, setTableLoading] = useState<boolean>(true);
   const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
   const [currentAdmin, setCurrentAdmin] = useState<any>({});
+
+  const { initialState } = useModel('@@initialState');
 
   const openEditModal = (record: any) => {
     // 信息清空并回填
@@ -136,14 +138,20 @@ const Admin: React.FC = () => {
       dataIndex: 'enabled',
       key: 'enabled',
       align: 'center',
-      render: (value: boolean, record: any) => (
-        <Switch
-          size={'small'}
-          checked={value}
-          onChange={(checked) => handleStatusChange(record, checked)}
-          loading={loading[record._id]}
-        />
-      ),
+      render: (value: boolean, record: any) => {
+        if (record._id === initialState?.adminInfo._id) {
+          return <Tag color="blue"> 当前用户 </Tag>;
+        } else {
+          return (
+            <Switch
+              size={'small'}
+              checked={value}
+              onChange={(checked) => handleStatusChange(record, checked)}
+              loading={loading[record._id]}
+            />
+          );
+        }
+      },
     },
     {
       title: '操作',

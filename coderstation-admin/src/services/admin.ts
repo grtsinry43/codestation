@@ -1,6 +1,6 @@
 import { request } from '@umijs/max';
 
-function getAdminList() {
+export function getAdminList() {
   return request('/api/admin', {
     method: 'GET',
   });

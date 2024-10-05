@@ -1,6 +1,6 @@
 import { request } from '@umijs/max';
 
-function getTypeListApi() {
+export function getTypeListApi() {
   return request('/api/type', {
     method: 'GET',
   });

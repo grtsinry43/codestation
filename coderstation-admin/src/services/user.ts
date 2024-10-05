@@ -1,6 +1,6 @@
 import { request } from '@umijs/max';
 
-function getUserList(params: any) {
+export function getUserList(params: any) {
   return request('/api/user', {
     method: 'GET',
     params: {
